@@ -1,8 +1,8 @@
 package com.fpmi.bsu.pharmacy.controller;
 
 import com.fpmi.bsu.pharmacy.dto.EmployeeDialogBean;
+import com.fpmi.bsu.pharmacy.dto.EmployeeDto;
 import com.fpmi.bsu.pharmacy.dto.EmployeeSearchBean;
-import com.fpmi.bsu.pharmacy.model.Employee;
 import com.fpmi.bsu.pharmacy.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,18 +26,18 @@ public class EmployeeController {
     }
 
     @PostMapping(path = "/save")
-    public ResponseEntity<Employee> save(@RequestBody EmployeeDialogBean dialogBean) {
+    public ResponseEntity<EmployeeDto> save(@RequestBody EmployeeDialogBean dialogBean) {
         return ResponseEntity.ok(employeeService.save(dialogBean));
     }
 
     @PutMapping(path = "/edit/{id}")
-    public ResponseEntity<Employee> update(@RequestBody EmployeeDialogBean dialogBean) {
+    public ResponseEntity<EmployeeDto> update(@RequestBody EmployeeDialogBean dialogBean) {
         return ResponseEntity.ok(employeeService.save(dialogBean));
     }
 
     @GetMapping(path = "/find/{id}")
-    public ResponseEntity<Employee> findById(@PathVariable Integer id) throws ResponseStatusException {
-        Employee employee = employeeService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found"));
+    public ResponseEntity<EmployeeDto> findById(@PathVariable Integer id) throws ResponseStatusException {
+        EmployeeDto employee = employeeService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found"));
         return ResponseEntity.ok(employee);
     }
 
@@ -48,7 +48,7 @@ public class EmployeeController {
     }
 
     @GetMapping(path = "/")
-    public ResponseEntity<List<Employee>> findAll(@RequestParam Map<String, String> params) {
+    public ResponseEntity<List<EmployeeDto>> findAll(@RequestParam Map<String, String> params) {
         if (params.isEmpty()) {
             return ResponseEntity.ok(employeeService.findAll());
         }

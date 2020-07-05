@@ -1,7 +1,10 @@
 package com.fpmi.bsu.pharmacy.service;
 
+import static com.fpmi.bsu.pharmacy.util.EmployeeMapper.*;
+
 import com.fpmi.bsu.pharmacy.criteria.EmployeeCriteria;
 import com.fpmi.bsu.pharmacy.dto.EmployeeDialogBean;
+import com.fpmi.bsu.pharmacy.dto.EmployeeDto;
 import com.fpmi.bsu.pharmacy.dto.EmployeeSearchBean;
 import com.fpmi.bsu.pharmacy.model.Employee;
 import com.fpmi.bsu.pharmacy.repository.EmployeeRepository;
@@ -23,13 +26,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee save(EmployeeDialogBean dialogBean) {
-        Employee employee = new Employee();
-        employee.setId(dialogBean.getId());
-        employee.setFirstName(dialogBean.getFirstName());
-        employee.setLastName(dialogBean.getLastName());
-        employee.setSalary(dialogBean.getSalary());
-        return employeeRepository.save(employee);
+    public EmployeeDto save(EmployeeDialogBean dialogBean) {
+        Employee toSave = mapDialogBean2Entity(dialogBean);
+        Employee saved = employeeRepository.save(toSave);
+        return mapEntity2Dto(saved);
     }
 
     @Override
@@ -38,22 +38,22 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Optional<Employee> findById(Integer id) {
-        return employeeRepository.findById(id);
+    public Optional<EmployeeDto> findById(Integer id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        EmployeeDto employeeDto = mapEntity2Dto(employee.orElse(null));
+        return Optional.ofNullable(employeeDto);
     }
 
     @Override
-    public List<Employee> findAll() {
-        return employeeRepository.findAll();
+    public List<EmployeeDto> findAll() {
+        List<Employee> employees = employeeRepository.findAll();
+        return mapEntityList2DtoList(employees);
     }
 
     @Override
-    public List<Employee> findAll(EmployeeSearchBean searchBean) {
-        String firstName = searchBean.getFirstName();
-        String lastName = searchBean.getLastName();
-        Integer minSalary = searchBean.getMinSalary();
-        Integer maxSalary = searchBean.getMaxSalary();
-        EmployeeCriteria criteria = new EmployeeCriteria(firstName, lastName, minSalary, maxSalary);
-        return employeeRepository.findAll(new EmployeeSpecification((criteria)));
+    public List<EmployeeDto> findAll(EmployeeSearchBean searchBean) {
+        EmployeeCriteria criteria = mapSearchBean2Criteria(searchBean);
+        List<Employee> employees = employeeRepository.findAll(new EmployeeSpecification((criteria)));
+        return mapEntityList2DtoList(employees);
     }
 }

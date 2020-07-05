@@ -7,9 +7,9 @@ import java.io.Serializable;
 
 @Data
 @Accessors(chain = true)
-public class EmployeeDialogBean implements Serializable {
+public class EmployeeDto implements Serializable {
 
-    private static final long serialVersionUID = 100459135630842973L;
+    private static final long serialVersionUID = -1202342631303918097L;
 
     private Integer id;
     private String firstName;

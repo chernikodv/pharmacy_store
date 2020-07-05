@@ -1,6 +1,7 @@
 package com.fpmi.bsu.pharmacy.model;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
+@Accessors(chain = true)
 @Table(name = "employee")
 @EqualsAndHashCode(of = "id")
 public class Employee implements Serializable {

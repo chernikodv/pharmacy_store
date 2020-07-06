@@ -1,8 +1,6 @@
 package com.fpmi.bsu.pharmacy.controller;
 
-import com.fpmi.bsu.pharmacy.dto.EmployeeDialogBean;
 import com.fpmi.bsu.pharmacy.dto.EmployeeDto;
-import com.fpmi.bsu.pharmacy.dto.EmployeeSearchBean;
 import com.fpmi.bsu.pharmacy.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,53 +16,37 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:4200")
 public class EmployeeController {
 
-    private final EmployeeService employeeService;
+    private final EmployeeService service;
 
     @Autowired
-    public EmployeeController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
+    public EmployeeController(EmployeeService service) {
+        this.service = service;
     }
 
     @PostMapping(path = "/save")
-    public ResponseEntity<EmployeeDto> save(@RequestBody EmployeeDialogBean dialogBean) {
-        return ResponseEntity.ok(employeeService.save(dialogBean));
+    public ResponseEntity<EmployeeDto> save(@RequestBody EmployeeDto employeeDto) {
+        return new ResponseEntity<>(service.save(employeeDto), HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/edit/{id}")
-    public ResponseEntity<EmployeeDto> update(@RequestBody EmployeeDialogBean dialogBean) {
-        return ResponseEntity.ok(employeeService.save(dialogBean));
+    public ResponseEntity<EmployeeDto> update(@RequestParam Integer id, @RequestBody EmployeeDto employeeDto) {
+        return ResponseEntity.ok(service.update(id, employeeDto));
     }
 
     @GetMapping(path = "/find/{id}")
     public ResponseEntity<EmployeeDto> findById(@PathVariable Integer id) throws ResponseStatusException {
-        EmployeeDto employee = employeeService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found"));
+        EmployeeDto employee = service.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found"));
         return ResponseEntity.ok(employee);
     }
 
     @DeleteMapping(path = "/remove/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Integer id) {
-        employeeService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable Integer id) {
+        service.deleteById(id);
     }
 
     @GetMapping(path = "/")
     public ResponseEntity<List<EmployeeDto>> findAll(@RequestParam Map<String, String> params) {
-        if (params.isEmpty()) {
-            return ResponseEntity.ok(employeeService.findAll());
-        }
-
-        String firstName = params.get("firstName");
-        String lastName = params.get("lastName");
-        Integer minSalary = null;
-        if (params.get("minSalary") != null) {
-            minSalary = Integer.parseInt(params.get("minSalary"));
-        }
-
-        Integer maxSalary = null;
-        if (params.get("maxSalary") != null) {
-            maxSalary = Integer.parseInt(params.get("maxSalary"));
-        }
-
-        return ResponseEntity.ok(employeeService.findAll(new EmployeeSearchBean(firstName, lastName, minSalary, maxSalary)));
+        return ResponseEntity.ok(service.findAll(params));
     }
 }

@@ -29,7 +29,7 @@ public class EmployeeController {
     }
 
     @PutMapping(path = "/edit/{id}")
-    public ResponseEntity<EmployeeDto> update(@RequestParam Integer id, @RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<EmployeeDto> update(@PathVariable Integer id, @RequestBody EmployeeDto employeeDto) {
         return ResponseEntity.ok(service.update(id, employeeDto));
     }
 

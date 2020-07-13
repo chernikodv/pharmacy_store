@@ -32,17 +32,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDto update(Integer id, EmployeeDto employeeDto) {
-        Optional<Employee> optionalEmployee = repository.findById(id);
-        if (optionalEmployee.isEmpty()) {
-            return save(employeeDto);
-        }
-
-        Employee employee = repository.save(mapDto2Entity(employeeDto, optionalEmployee.get()));
-        return mapEntity2Dto(employee);
-    }
-
-    @Override
     public void deleteById(Integer id) {
         repository.deleteById(id);
     }

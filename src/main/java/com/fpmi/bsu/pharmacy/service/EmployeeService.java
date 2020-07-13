@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface EmployeeService {
     EmployeeDto save(EmployeeDto employeeDto);
-    EmployeeDto update(Integer id, EmployeeDto employeeDto);
     void deleteById(Integer id);
     Optional<EmployeeDto> findById(Integer id);
     List<EmployeeDto> findAll(Map<String, String> params);

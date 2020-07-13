@@ -25,13 +25,6 @@ public class EmployeeMapper {
                 .setSalary(employeeDto.getSalary());
     }
 
-    public static Employee mapDto2Entity(EmployeeDto employeeDto, Employee employee) {
-        return employee
-                .setFirstName(employeeDto.getFirstName())
-                .setLastName(employeeDto.getLastName())
-                .setSalary(employeeDto.getSalary());
-    }
-
     public static EmployeeDto mapEntity2Dto(Employee employee) {
         return new EmployeeDto(
                 employee.getId(),

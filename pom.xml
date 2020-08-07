@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.fpmi.bsu</groupId>
 	<artifactId>pharmacy_store</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>Pharmacy store</name>
 	<description>Pharmacy store demo project</description>
 

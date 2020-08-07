@@ -42,6 +42,6 @@ public class EmployeeSpecification implements Specification<Employee> {
             predicates.add(builder.lessThanOrEqualTo(root.get(Employee_.salary), maxSalary));
         }
 
-        return builder.and(predicates.stream().toArray(Predicate[]::new));
+        return builder.and(predicates.toArray(Predicate[]::new));
     }
 }

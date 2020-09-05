@@ -9,6 +9,8 @@ import com.fpmi.bsu.pharmacy.repository.EmployeeRepository;
 import com.fpmi.bsu.pharmacy.repository.EmployeeSpecification;
 import com.fpmi.bsu.pharmacy.util.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,23 +45,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeDto> findAll(Map<String, String> params) {
-        if (params.isEmpty()) {
-            mapEntityList2DtoList(repository.findAll());
+        if (params == null || params.isEmpty()) {
+            List<Employee> employees = repository.findAll();
+            return mapEntityList2DtoList(employees);
         }
 
-        String firstName = params.get("firstName");
-        String lastName = params.get("lastName");
-        Integer minSalary = null;
-        if (params.get("minSalary") != null) {
-            minSalary = Integer.parseInt(params.get("minSalary"));
+        EmployeeCriteria criteria = new EmployeeCriteria(params);
+        Specification<Employee> specification = new EmployeeSpecification(criteria);
+
+        List<Employee> employees = null;
+        if (criteria.isSortEnabled()) {
+            Sort.Direction direction = Sort.Direction.fromString(criteria.getDirection());
+            Sort sort = Sort.by(direction, criteria.getOrderBy());
+            employees = repository.findAll(specification, sort);
+        } else {
+            employees = repository.findAll(specification);
         }
 
-        Integer maxSalary = null;
-        if (params.get("maxSalary") != null) {
-            maxSalary = Integer.parseInt(params.get("maxSalary"));
-        }
-
-        EmployeeCriteria criteria = new EmployeeCriteria(firstName, lastName, minSalary, maxSalary);
-        return mapEntityList2DtoList(repository.findAll(new EmployeeSpecification(criteria)));
+        return mapEntityList2DtoList(employees);
     }
 }
